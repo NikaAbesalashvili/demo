@@ -66,4 +66,17 @@ export class TasksService {
             throw new NotFoundException(`User with ID ${id} not found`);
         }
     };
+
+    async findTasksByUser(userId: string): Promise<Task[]> {
+        const user = await this.usersRepository.findOneBy({ id: userId });
+
+        if (!user) {
+            throw new NotFoundException(`User with ID ${userId} not found`);
+        };
+
+        return this.tasksRepository.find({
+            where: { user: { id: userId } },
+            relations: ['user'],
+        });
+    };
 };
